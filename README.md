@@ -1,21 +1,18 @@
-# Ejercicio de tabla crud
+# ejercicio-tabla-crud
 
-## Crear una tabla CRUD con react y redux.
+> A Vue.js project
 
-- Utilizar json-server para la api. https://github.com/typicode/json-server con el archivo db.json de este repositorio.
-Para obtener los datos debes hacer una llamada a la api.
+## Build Setup
 
-Ejemplo:
-  
-| id     | Nombre        | Apellido    | Email                  |
-| -------|---------------| ------------|------------------------|
-| 1      |Earlie         |Upstell      |eupstell0@aboutads.info |
-| 2      |Neely          |Giovannini   |ngiovannini1@naver.com  |
-| 3      |Adelice        |Driver       |adriver2@europa.eu      |
-	
-- La idea es que puedas agregar una fila con esos campos,
-editarlos y eliminarlos. 
-- Los datos deben estar en una store con redux.
-- Debe tener páginacion de 10 y ser capaz de paginar los datos.
-- Aplica tu propio estilo en css o algún otro preprocesador como sass o less si prefieres.
-- No utilizar jquery.
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+```
+
+For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
