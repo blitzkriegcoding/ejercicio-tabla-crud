@@ -6,6 +6,16 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         people: []
+    },
+    getters: {
+        getPeople(state){
+            return state.people;
+        }
+    },
+    mutations: {
+        setPeople(state, people) {
+            state.people = people;
+        }
     }
 }); 
 

@@ -1,12 +1,11 @@
 // Servicio de paginación
-getSlicePagination = (arrayRecords, pageFactor, pageNumber = 1) => {
+getSlicePagination = (data, pageFactor = 10, pageNumber = 1) => {
     let recordSlice = [];
-
+    let arrayRecords = data.map( (x) => { return x })
     if(pageFactor < 1 || arrayRecords.length == 0) return;  
     let slices = Math.floor(arrayRecords.length / pageFactor);  
-    let arrayRecordsLength = arrayRecords.length
+    let arrayRecordsLength = arrayRecords.length;
     if(pageNumber > slices) return; 
-
     if(pageNumber == slices) {
         if(arrayRecordsLength % pageFactor != 0) {          
             recordSlice = arrayRecords.slice(slices * pageFactor, (slices * pageFactor) + (arrayRecordsLength % pageFactor));
@@ -19,7 +18,7 @@ getSlicePagination = (arrayRecords, pageFactor, pageNumber = 1) => {
             } else {
                 recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);           
             }           
-    }   
+    }  
     return recordSlice;
 }
 
