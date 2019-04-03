@@ -1,13 +1,32 @@
 <template>
   <div>
+    <table class="fixed_header table_border">
+      <thead>
+        <tr>
+          <th v-for="header in fields">{{ header.label }}</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="record in records">
+          <td v-for="field in fields">
+            {{record[field.key]}}
+          </td>
+          <td>
+            <b-button variant="primary">Primary</b-button>
+            <b-button variant="danger" @click="deleteRecord(record.id)">Danger</b-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     <div>
-      <b-table striped hover :items="records" :fields="fields"></b-table>
-    </div> Ir a Página:  
-    <select @change="onChange" v-model="selectedPage">
-      <option v-for="i in (getPeople.length / 10)">
-       {{i}}
-      </option>
-    </select>
+      Ir a Página:  
+      <select @change="onChange" v-model="selectedPage">
+        <option v-for="i in (getPeople.length / 10)">
+         {{i}}
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 <script>
@@ -34,6 +53,10 @@
       },
       setPeopleRecords(records){
         this.$store.commit('setPeople', records);
+      },
+      deleteRecord(id){
+        let index = this.getPeople.findIndex( item => item.id === id );
+        alert(index);
       }
   },
 
@@ -56,7 +79,6 @@
             key: 'email',
             label: 'Unique Email'
           }
-
         ],        
         selectedPage: 1,
         records: []
@@ -65,5 +87,37 @@
   }
 </script>
 <style>
-  
+.fixed_header{
+    width: 1000px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 300px;
+}
+
+.fixed_header thead tr {
+   display: block;
+}
+
+.fixed_header thead {
+  background: black;
+  color:#fff;
+}
+
+.fixed_header th, .fixed_header td {
+  padding: 5px;
+  text-align: left;
+  width: 200px;
+}
+.table_border {
+  border: 1px solid #000;
+}
+.align_td {
+  text-align: center
+}
 </style>
