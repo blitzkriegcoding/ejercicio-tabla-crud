@@ -89,8 +89,17 @@
         this.$store.commit('setPeople', records);
       },
       clearModel(){
-        this.newRecord = {};
-        this.editRecord = {};
+        this.newRecord = {
+          first_name: "",
+          last_name: "",
+          email: ""
+        };
+        this.editRecord = {
+          id: null,
+          first_name: "",
+          last_name: "",
+          email: ""
+        };
       }, 
       updateRecord(record){
         this.editRecord.id = record.id;
