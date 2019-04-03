@@ -8,7 +8,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="record in records">
+        <tr v-for="record in setVisibleRecords">
           <td v-for="field in fields">
             {{record[field.key]}}
           </td>
@@ -36,21 +36,18 @@
   import axios from 'axios';    
   export default {
   mounted() {
-      // 
-      axios.get('http://localhost:3000/people')
-      .then(response => {
-        this.setPeopleRecords(response.data);
-        this.records = getSlicePagination(this.getPeople);
-      });
+      this.$store.dispatch('fetchPeople');      
     },
     computed: {
       getPeople() {
         return this.$store.getters.getPeople;
       },
+      setVisibleRecords(){
+        return this.records.length == 0 ? getSlicePagination(this.getPeople) : this.records;
+      },
       getTotalRecords(){
         return Math.floor(this.$store.getters.getPeople.length / 10);
       }
-
     },
     methods: {
       onChange(event){
@@ -60,21 +57,13 @@
       setPeopleRecords(records){
         this.$store.commit('setPeople', records);
       },
-      deleteRecord(id){
-        let index = this.getPeople.findIndex( item => item.id === id );
-        // console.log("*".repeat(50))
-        // console.log("START BEFORE")
-        // console.log(getSlicePagination(this.getPeople, 10, this.selectedPage));
-        // console.log("END BEFORE")
-        // console.log("*".repeat(50))        
-        this.$store.commit('deletePerson', index);
-        // console.log("*".repeat(50))
-        // console.log("START AFTER")
-        // console.log(getSlicePagination(this.getPeople, 10, this.selectedPage));
-        // console.log("END AFTER")
-        // console.log("*".repeat(50))
-        this.records = getSlicePagination(this.getPeople, 10, this.selectedPage);
+      deleteRecord(id){        
+        this.$store.dispatch('deletePerson', id);
+        this.resetVisibleRecords(getSlicePagination(this.getPeople, 10, this.selectedPage));
       },
+      resetVisibleRecords(visibleRecords){
+        this.$store.commit('setPageList', visibleRecords)
+      }
 
   },
 

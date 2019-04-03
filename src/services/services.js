@@ -13,14 +13,15 @@ getSlicePagination = (arrayRecords, pageFactor = 10, pageNumber = 1) => {
             recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
         }
     } else if(pageNumber < slices) {
-            if(arrayRecordsModule != 0) {
-                // Little bug
-                // if(pageNumber == 1) console.log(`Page number: ${pageNumber}`, `Recs by page: ${pageFactor}`, `${pageNumber * pageFactor}`, (pageNumber + 1) * pageFactor);
-                // recordSlice = arrayRecords.slice(pageNumber * pageFactor, (pageNumber + 1) * pageFactor);
-                recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
-            } else {
-                recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
-            }           
+        recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
+        // if(arrayRecordsModule != 0) {
+        //     // Little bug
+        //     // if(pageNumber == 1) console.log(`Page number: ${pageNumber}`, `Recs by page: ${pageFactor}`, `${pageNumber * pageFactor}`, (pageNumber + 1) * pageFactor);
+        //     // recordSlice = arrayRecords.slice(pageNumber * pageFactor, (pageNumber + 1) * pageFactor);
+        //     recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
+        // } else {
+        //     recordSlice = arrayRecords.slice((pageNumber - 1) * pageFactor, pageNumber * pageFactor);
+        // }           
     }  
     return recordSlice;
 }
