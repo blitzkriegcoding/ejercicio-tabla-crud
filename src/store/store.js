@@ -51,12 +51,14 @@ export const store = new Vuex.Store({
 					}
 			}) 
 		},
-		updatePerson(context, payload, id){			
-			axios.put(`http://localhost:3000/people/${id}`, payload)
+		updatePerson(context, payload){
+			let record = {first_name: payload.first_name, last_name: payload.last_name, email: payload.email}
+			axios.put(`http://localhost:3000/people/${payload.id}`, record)
 				.then((resolve) => {
-					if(resolve.status == 204) {						
+					if(resolve.status == 200){
 						context.dispatch('fetchPeople');
 					}
+					
 			}) 
 		}		
 

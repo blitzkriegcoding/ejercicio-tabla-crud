@@ -13,7 +13,7 @@
             {{record[field.key]}}
           </td>
           <td>
-            <b-button variant="primary" @click="updateRecord(record)">Edit</b-button>
+            <b-button variant="primary" v-b-modal.modal-update @click="updateRecord(record)">Edit</b-button>
             <b-button variant="danger" @click="deleteRecord(record.id)">Delete</b-button>
           </td>
         </tr>
@@ -34,11 +34,11 @@
     <!-- Modal Component -->
     <b-modal
       id="modal-prevent"
-      ref="modal"
+      ref="modalAdd"
       title="Submit a new record"
-      @ok="handleOk"
-      @shown="clearName">
-      <form @submit.stop.prevent="handleSubmit">
+      @ok="handleAddOk"
+      >
+      <form @submit.stop.prevent="handleSubmitAdd">
         <b-form-input v-model="newRecord.first_name" placeholder="First name"></b-form-input>
         <hr/>
         <b-form-input v-model="newRecord.last_name" placeholder="Last name"></b-form-input>
@@ -47,7 +47,20 @@
       </form>
     </b-modal>
 
-
+    <b-modal
+      id="modal-update"
+      ref="modalUpdate"
+      title="Edit a record"
+      @ok="handleUpdateOk"
+      >
+      <form @submit.stop.prevent="handleSubmitUpdate">
+        <b-form-input v-model="editRecord.first_name" placeholder="First name"></b-form-input>
+        <hr/>
+        <b-form-input v-model="editRecord.last_name" placeholder="Last name"></b-form-input>
+        <hr/>
+        <b-form-input v-model="editRecord.email" placeholder="Email"></b-form-input>
+      </form>
+    </b-modal>
   </div>
 </template>
 <script>
@@ -75,7 +88,12 @@
       setPeopleRecords(records){
         this.$store.commit('setPeople', records);
       },
+      clearModel(){
+        this.newRecord = {};
+        this.updateRecord = {};
+      }, 
       updateRecord(record){
+        this.editRecord.id = record.id;
         this.editRecord.first_name = record.first_name;
         this.editRecord.last_name = record.last_name;
         this.editRecord.email = record.email;
@@ -86,32 +104,42 @@
       },
       resetVisibleRecords(visibleRecords){        
         this.$store.commit('setPageList', visibleRecords)
-      },
-      clearName() {
-        // this.name = ''
-        this.newRecord.first_name = "";
-        this.newRecord.last_name= ""; 
-        this.newRecord.email = "";
-      },      
-      handleOk(evt) {
+      },  
+      handleAddOk(evt) {
         // Prevent modal from closing
         evt.preventDefault()
         if (this.newRecord.first_name =="" || this.newRecord.last_name == "" || this.newRecord.email == "") {
           alert('Please enter the missing field...')          
         } else {
-          this.handleSubmit()
+          this.handleSubmitAdd()
         }
       },
-      handleSubmit() {
+      handleUpdateOk(evt) {
+        // Prevent modal from closing
+        evt.preventDefault()
+        if (this.editRecord.first_name =="" || this.editRecord.last_name == "" || this.editRecord.email == "") {
+          alert('Please enter the missing field...')          
+        } else {
+          this.handleSubmitUpdate()
+        }
+      }, 
+
+      handleSubmitAdd() {
         this.$store.dispatch('addPerson', this.newRecord);        
         this.$nextTick(() => {
           // Wrapped in $nextTick to ensure DOM is rendered before closing
-          this.$refs.modal.hide();
-          this.clearName();
+          this.$refs.modalAdd.hide();
+          this.clearModel();
         })
-      }      
-
-
+      },
+      handleSubmitUpdate() {
+        this.$store.dispatch('updatePerson', this.editRecord);        
+        this.$nextTick(() => {
+          // Wrapped in $nextTick to ensure DOM is rendered before closing
+          this.$refs.modalUpdate.hide();
+          this.clearModel();          
+        })
+      } 
   },
 
   data () {
@@ -131,7 +159,7 @@
           },
           {
             key: 'email',
-            label: 'Unique Email'
+            label: 'Email'
           }
         ],        
         selectedPage: 1,
@@ -142,9 +170,10 @@
           email: ""
         },
         editRecord: {
+          id: null,
           first_name: "",
           last_name: "",
-          email: ""
+          email: ""          
         }
       }
     }
