@@ -43,7 +43,7 @@
         return this.$store.getters.getPeople;
       },
       setVisibleRecords(){
-        return this.records.length == 0 ? getSlicePagination(this.getPeople) : this.records;
+        return getSlicePagination(this.getPeople, 10, this.selectedPage);
       },
       getPagesList(){
         return this.$store.getters.getPagesList;
