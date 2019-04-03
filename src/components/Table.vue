@@ -90,13 +90,14 @@
       },
       clearModel(){
         this.newRecord = {};
-        this.updateRecord = {};
+        this.editRecord = {};
       }, 
       updateRecord(record){
         this.editRecord.id = record.id;
         this.editRecord.first_name = record.first_name;
         this.editRecord.last_name = record.last_name;
         this.editRecord.email = record.email;
+        console.log(this.editRecord);
       },
       deleteRecord(id){        
         this.$store.dispatch('deletePerson', id);
