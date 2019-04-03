@@ -13,15 +13,12 @@
             {{record[field.key]}}
           </td>
           <td>
-            <b-button variant="primary">Primary</b-button>
-            <b-button variant="danger" @click="deleteRecord(record.id)">Danger</b-button>
+            <b-button variant="primary" @click="updateRecord(record)">Edit</b-button>
+            <b-button variant="danger" @click="deleteRecord(record.id)">Delete</b-button>
           </td>
         </tr>
       </tbody>
     </table>
-<!--     <template slot>
-      
-    </template> -->
     <div>
       Ir a Página:  
       <select @change="onChange" v-model="selectedPage">
@@ -29,7 +26,28 @@
          {{i}}
         </option>
       </select>
+      <br/><br>
+        <b-button variant="success" v-b-modal.modal-prevent>Add New Record</b-button>
+      <br/>      
     </div>
+
+    <!-- Modal Component -->
+    <b-modal
+      id="modal-prevent"
+      ref="modal"
+      title="Submit a new record"
+      @ok="handleOk"
+      @shown="clearName">
+      <form @submit.stop.prevent="handleSubmit">
+        <b-form-input v-model="newRecord.first_name" placeholder="First name"></b-form-input>
+        <hr/>
+        <b-form-input v-model="newRecord.last_name" placeholder="Last name"></b-form-input>
+        <hr/>
+        <b-form-input v-model="newRecord.email" placeholder="Email"></b-form-input>
+      </form>
+    </b-modal>
+
+
   </div>
 </template>
 <script>
@@ -47,7 +65,7 @@
       },
       getPagesList(){
         return this.$store.getters.getPagesList;
-      }
+      },
     },
     methods: {
       onChange(event){
@@ -57,14 +75,42 @@
       setPeopleRecords(records){
         this.$store.commit('setPeople', records);
       },
+      updateRecord(record){
+        this.editRecord.first_name = record.first_name;
+        this.editRecord.last_name = record.last_name;
+        this.editRecord.email = record.email;
+      },
       deleteRecord(id){        
         this.$store.dispatch('deletePerson', id);
         this.resetVisibleRecords(getSlicePagination(this.getPeople, 10, this.selectedPage));
       },
-      resetVisibleRecords(visibleRecords){
-        console.log(visibleRecords);
+      resetVisibleRecords(visibleRecords){        
         this.$store.commit('setPageList', visibleRecords)
-      }
+      },
+      clearName() {
+        // this.name = ''
+        this.newRecord.first_name = "";
+        this.newRecord.last_name= ""; 
+        this.newRecord.email = "";
+      },      
+      handleOk(evt) {
+        // Prevent modal from closing
+        evt.preventDefault()
+        if (this.newRecord.first_name =="" || this.newRecord.last_name == "" || this.newRecord.email == "") {
+          alert('Please enter the missing field...')          
+        } else {
+          this.handleSubmit()
+        }
+      },
+      handleSubmit() {
+        this.$store.dispatch('addPerson', this.newRecord);        
+        this.$nextTick(() => {
+          // Wrapped in $nextTick to ensure DOM is rendered before closing
+          this.$refs.modal.hide();
+          this.clearName();
+        })
+      }      
+
 
   },
 
@@ -89,7 +135,17 @@
           }
         ],        
         selectedPage: 1,
-        records: []
+        records: [],
+        newRecord:{
+          first_name: "",
+          last_name: "",
+          email: ""
+        },
+        editRecord: {
+          first_name: "",
+          last_name: "",
+          email: ""
+        }
       }
     }
   }
