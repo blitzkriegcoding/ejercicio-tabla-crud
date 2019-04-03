@@ -15,6 +15,9 @@ export const store = new Vuex.Store({
     mutations: {
         setPeople(state, people) {
             state.people = people;
+        },
+        deletePerson(state, index){
+            state.people.splice(index, 1);            
         }
     }
 }); 

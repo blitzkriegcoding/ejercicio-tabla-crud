@@ -19,10 +19,13 @@
         </tr>
       </tbody>
     </table>
+<!--     <template slot>
+      
+    </template> -->
     <div>
       Ir a Página:  
       <select @change="onChange" v-model="selectedPage">
-        <option v-for="i in (getPeople.length / 10)">
+        <option v-for="i in getTotalRecords">
          {{i}}
         </option>
       </select>
@@ -37,14 +40,17 @@
       axios.get('http://localhost:3000/people')
       .then(response => {
         this.setPeopleRecords(response.data);
-
         this.records = getSlicePagination(this.getPeople);
       });
     },
     computed: {
       getPeople() {
         return this.$store.getters.getPeople;
+      },
+      getTotalRecords(){
+        return Math.floor(this.$store.getters.getPeople.length / 10);
       }
+
     },
     methods: {
       onChange(event){
@@ -56,8 +62,20 @@
       },
       deleteRecord(id){
         let index = this.getPeople.findIndex( item => item.id === id );
-        alert(index);
-      }
+        // console.log("*".repeat(50))
+        // console.log("START BEFORE")
+        // console.log(getSlicePagination(this.getPeople, 10, this.selectedPage));
+        // console.log("END BEFORE")
+        // console.log("*".repeat(50))        
+        this.$store.commit('deletePerson', index);
+        // console.log("*".repeat(50))
+        // console.log("START AFTER")
+        // console.log(getSlicePagination(this.getPeople, 10, this.selectedPage));
+        // console.log("END AFTER")
+        // console.log("*".repeat(50))
+        this.records = getSlicePagination(this.getPeople, 10, this.selectedPage);
+      },
+
   },
 
   data () {
