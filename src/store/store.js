@@ -11,7 +11,10 @@ export const store = new Vuex.Store({
 	getters: {
 		getPeople(state){			
 			return state.people;
-		}
+		},
+    getPagesList(state){
+      return Math.floor(state.people.length / 10);
+    }		
 	},
 	mutations: {
 		setPeople(state, people) {

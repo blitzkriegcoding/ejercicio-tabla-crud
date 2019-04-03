@@ -25,7 +25,7 @@
     <div>
       Ir a Página:  
       <select @change="onChange" v-model="selectedPage">
-        <option v-for="i in getTotalRecords">
+        <option v-for="i in getPagesList">
          {{i}}
         </option>
       </select>
@@ -45,8 +45,8 @@
       setVisibleRecords(){
         return this.records.length == 0 ? getSlicePagination(this.getPeople) : this.records;
       },
-      getTotalRecords(){
-        return Math.floor(this.$store.getters.getPeople.length / 10);
+      getPagesList(){
+        return this.$store.getters.getPagesList;
       }
     },
     methods: {
@@ -62,6 +62,7 @@
         this.resetVisibleRecords(getSlicePagination(this.getPeople, 10, this.selectedPage));
       },
       resetVisibleRecords(visibleRecords){
+        console.log(visibleRecords);
         this.$store.commit('setPageList', visibleRecords)
       }
 
